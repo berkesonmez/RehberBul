@@ -17,6 +17,12 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import PhotoIcon from "@material-ui/icons/Photo";
 
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+
 const useStyles = makeStyles((theme) => ({
     fab: {
         position: "fixed",
@@ -109,6 +115,17 @@ export default function FloatingActionButtons(props) {
     };
     const classes = useStyles();
 
+    const [age, setAge] = React.useState("");
+
+    const handleChange = (event) => {
+        setPost({
+            ...post,
+            tCityId: "p" + event.target.value.plaka,
+            city: event.target.value.il,
+        });
+        setAge(event.target.value);
+    };
+
     useEffect(() => {
         database.ref("categories/").on("value", (snapshot) => {
             const Categories = snapshot.val();
@@ -129,9 +146,10 @@ export default function FloatingActionButtons(props) {
                 city: cityValue.il,
                 tCityId: "p" + cityValue.plaka,
             });
+
             setClicked(false);
         }
-    }, [cityValue, cityInputValue]);
+    }, [cityInputValue]);
     return (
         <div className={classes.root}>
             <Fab
@@ -239,7 +257,37 @@ export default function FloatingActionButtons(props) {
                         variant="outlined"
                         helperText="Telefon numaranızı giriniz"
                     />
-                    <Autocomplete
+                    <FormControl variant="outlined" fullWidth>
+                        <InputLabel id="locationLabel">Şehir</InputLabel>
+                        <Select
+                            labelId="locationLabel"
+                            id="location"
+                            value={age}
+                            onChange={handleChange}
+                            label="location"
+                        >
+                            {/* <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem> */}
+                            {iller.map((v, i) => {
+                                return (
+                                    <MenuItem key={v.il} value={v} id={v.il}>
+                                        {v.il}
+                                    </MenuItem>
+                                );
+
+                                {
+                                    /* console.log(v.il, v.plaka); */
+                                }
+                            })}
+                            {/* <MenuItem value={20}>Twenty</MenuItem>
+                            <MenuItem value={30}>Thirty</MenuItem> */}
+                        </Select>
+                        <FormHelperText>
+                            Gezinin yer aldığı şehiri seçiniz
+                        </FormHelperText>
+                    </FormControl>
+                    {/* <Autocomplete
                         id="location"
                         // style={{ width: 300 }}
                         fullWidth
@@ -256,6 +304,7 @@ export default function FloatingActionButtons(props) {
                         }}
                         inputValue={cityInputValue}
                         onInputChange={(event, newInputValue) => {
+                            setClicked(true);
                             setCityInputValue(newInputValue);
                             console.log(cityInputValue);
                         }}
@@ -273,7 +322,7 @@ export default function FloatingActionButtons(props) {
                                 }}
                             />
                         )}
-                    />
+                    /> */}
                     {/* Yedek */}
                     {/* <Autocomplete
                         value={cityValue}
