@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import validate from "validate.js";
 import moment from "moment";
-
+import 'moment/locale/tr';
 import { withStyles } from "@material-ui/core/styles";
 
 import {
@@ -582,7 +582,7 @@ class AccountTab extends Component {
                 sentVerificationEmail: true,
               },
               () => {
-                this.props.openSnackbar("Sent verification e-mail");
+                this.props.openSnackbar("Doğrulama e-maili gönderildi");
               }
             );
           })
@@ -779,7 +779,7 @@ class AccountTab extends Component {
                       <Badge
                         classes={{ badge: classes.badge }}
                         badgeContent={
-                          <Tooltip title="Remove">
+                          <Tooltip title="Kaldır">
                             <Fab
                               classes={{ sizeSmall: classes.small }}
                               color="secondary"
@@ -829,7 +829,7 @@ class AccountTab extends Component {
                           <Badge
                             classes={{ badge: classes.badge }}
                             badgeContent={
-                              <Tooltip title="Remove">
+                              <Tooltip title="Kaldır">
                                 <Fab
                                   classes={{ sizeSmall: classes.small }}
                                   color="secondary"
@@ -919,7 +919,7 @@ class AccountTab extends Component {
                       variant="contained"
                       onClick={this.uploadAvatar}
                     >
-                      Upload
+                      Yükle
                     </Button>
                   )}
 
@@ -941,7 +941,7 @@ class AccountTab extends Component {
                           startIcon={<PhotoIcon />}
                           variant="contained"
                         >
-                          Choose...
+                          Seç...
                         </Button>
                       </label>
                     </>
@@ -951,7 +951,7 @@ class AccountTab extends Component {
 
               <Grid item xs>
                 <Box textAlign="center">
-                  <Typography variant="body1">Profile completion</Typography>
+                  <Typography variant="body1">Profil tamamlanma oranı</Typography>
 
                   {profileCompletion === 0 && (
                     <Typography color="error" variant="h5">
@@ -975,7 +975,7 @@ class AccountTab extends Component {
 
               <Grid item xs>
                 <Box textAlign="center">
-                  <Typography variant="body1">Security rating</Typography>
+                  <Typography variant="body1">Güvenlik derecesi</Typography>
 
                   {securityRating === 0 && (
                     <Typography color="error" variant="h5">
@@ -1006,7 +1006,7 @@ class AccountTab extends Component {
                   <Badge
                     classes={{ badge: classes.badge }}
                     badgeContent={
-                      <Tooltip title="Remove">
+                      <Tooltip title="Kaldır">
                         <Fab
                           classes={{ sizeSmall: classes.small }}
                           color="secondary"
@@ -1056,7 +1056,7 @@ class AccountTab extends Component {
                       <Badge
                         classes={{ badge: classes.badge }}
                         badgeContent={
-                          <Tooltip title="Remove">
+                          <Tooltip title="Kaldır">
                             <Fab
                               classes={{ sizeSmall: classes.small }}
                               color="secondary"
@@ -1134,7 +1134,7 @@ class AccountTab extends Component {
                   variant="contained"
                   onClick={this.uploadAvatar}
                 >
-                  Upload
+                  Yükle
                 </Button>
               )}
 
@@ -1156,7 +1156,7 @@ class AccountTab extends Component {
                       startIcon={<PhotoIcon />}
                       variant="contained"
                     >
-                      Choose...
+                      Seç...
                     </Button>
                   </label>
                 </>
@@ -1166,7 +1166,7 @@ class AccountTab extends Component {
             <Grid container>
               <Grid item xs>
                 <Box textAlign="center">
-                  <Typography variant="body1">Profile completion</Typography>
+                  <Typography variant="body1">Profil tamamlanma oranı</Typography>
 
                   {profileCompletion === 0 && (
                     <Typography color="error" variant="h5">
@@ -1190,7 +1190,7 @@ class AccountTab extends Component {
 
               <Grid item xs>
                 <Box textAlign="center">
-                  <Typography variant="body1">Security rating</Typography>
+                  <Typography variant="body1">Güvenlik derecesi</Typography>
 
                   {securityRating === 0 && (
                     <Typography color="error" variant="h5">
@@ -1225,7 +1225,7 @@ class AccountTab extends Component {
 
             {!hasFirstName && (
               <ListItemIcon>
-                <Tooltip title="No first name">
+                <Tooltip title="İsim yok">
                   <WarningIcon color="error" />
                 </Tooltip>
               </ListItemIcon>
@@ -1241,9 +1241,9 @@ class AccountTab extends Component {
                 helperText={
                   errors && errors.firstName
                     ? errors.firstName[0]
-                    : "Press Enter to change your first name"
+                    : "İsminizi değiştirmek için Enter tuşuna basınız."
                 }
-                label="First name"
+                label="İsim"
                 placeholder={hasFirstName && userData.firstName}
                 required
                 type="text"
@@ -1259,17 +1259,17 @@ class AccountTab extends Component {
             {showingField !== "first-name" && (
               <>
                 <ListItemText
-                  primary="First name"
+                  primary="İsim"
                   secondary={
                     hasFirstName
                       ? userData.firstName
-                      : "You don’t have a first name"
+                      : "İsminizi girmediniz"
                   }
                 />
 
                 <ListItemSecondaryAction>
                   {hasFirstName && (
-                    <Tooltip title="Change">
+                    <Tooltip title="Değiştir">
                       <div>
                         <IconButton
                           disabled={performingAction}
@@ -1288,7 +1288,7 @@ class AccountTab extends Component {
                       variant="contained"
                       onClick={() => this.showField("first-name")}
                     >
-                      Add
+                      Ekle
                     </Button>
                   )}
                 </ListItemSecondaryAction>
@@ -1305,7 +1305,7 @@ class AccountTab extends Component {
 
             {!hasLastName && (
               <ListItemIcon>
-                <Tooltip title="No last name">
+                <Tooltip title="Soyadı yok">
                   <WarningIcon color="error" />
                 </Tooltip>
               </ListItemIcon>
@@ -1321,9 +1321,9 @@ class AccountTab extends Component {
                 helperText={
                   errors && errors.lastName
                     ? errors.lastName[0]
-                    : "Press Enter to change your last name"
+                    : "Soyadınızı değiştirmek için Enter tuşuna basınız"
                 }
-                label="Last name"
+                label="Soyadı"
                 placeholder={hasLastName && userData.lastName}
                 required
                 type="text"
@@ -1339,17 +1339,17 @@ class AccountTab extends Component {
             {showingField !== "last-name" && (
               <>
                 <ListItemText
-                  primary="Last name"
+                  primary="Soyadı"
                   secondary={
                     hasLastName
                       ? userData.lastName
-                      : "You don’t have a last name"
+                      : "Soyadınızı girmediniz"
                   }
                 />
 
                 <ListItemSecondaryAction>
                   {hasLastName && (
-                    <Tooltip title="Change">
+                    <Tooltip title="Değiştir">
                       <div>
                         <IconButton
                           disabled={performingAction}
@@ -1368,7 +1368,7 @@ class AccountTab extends Component {
                       variant="contained"
                       onClick={() => this.showField("last-name")}
                     >
-                      Add
+                      Ekle
                     </Button>
                   )}
                 </ListItemSecondaryAction>
@@ -1385,7 +1385,7 @@ class AccountTab extends Component {
 
             {!hasUsername && (
               <ListItemIcon>
-                <Tooltip title="No username">
+                <Tooltip title="Kullanıcı adı yok">
                   <WarningIcon color="error" />
                 </Tooltip>
               </ListItemIcon>
@@ -1401,7 +1401,7 @@ class AccountTab extends Component {
                 helperText={
                   errors && errors.username
                     ? errors.username[0]
-                    : "Press Enter to change your username"
+                    : "Kullanıcı adınızı değiştirmek için Enter tuşuna basınız"
                 }
                 label="Username"
                 placeholder={hasUsername && userData.username}
@@ -1419,17 +1419,17 @@ class AccountTab extends Component {
             {showingField !== "username" && (
               <>
                 <ListItemText
-                  primary="Username"
+                  primary="Kullanıcı adı"
                   secondary={
                     hasUsername
                       ? userData.username
-                      : "You don’t have a username"
+                      : "Kullanıcı adınızı girmediniz"
                   }
                 />
 
                 <ListItemSecondaryAction>
                   {hasUsername && (
-                    <Tooltip title="Change">
+                    <Tooltip title="Değiştir">
                       <div>
                         <IconButton
                           disabled={performingAction}
@@ -1448,7 +1448,7 @@ class AccountTab extends Component {
                       variant="contained"
                       onClick={() => this.showField("username")}
                     >
-                      Add
+                      Ekle
                     </Button>
                   )}
                 </ListItemSecondaryAction>
@@ -1467,13 +1467,13 @@ class AccountTab extends Component {
               <ListItemIcon>
                 <>
                   {user.emailVerified && (
-                    <Tooltip title="Verified">
+                    <Tooltip title="Onaylandı">
                       <CheckIcon color="primary" />
                     </Tooltip>
                   )}
 
                   {!user.emailVerified && (
-                    <Tooltip title="Not verified">
+                    <Tooltip title="Onaylanmadı">
                       <WarningIcon color="error" />
                     </Tooltip>
                   )}
@@ -1483,7 +1483,7 @@ class AccountTab extends Component {
 
             {!user.email && (
               <ListItemIcon>
-                <Tooltip title="No e-mail address">
+                <Tooltip title="E-mail adresi yok">
                   <WarningIcon color="error" />
                 </Tooltip>
               </ListItemIcon>
@@ -1499,9 +1499,9 @@ class AccountTab extends Component {
                 helperText={
                   errors && errors.emailAddress
                     ? errors.emailAddress[0]
-                    : "Press Enter to change your e-mail address"
+                    : "E-mail adresinizi değiştirmek için Enter tuşuna basınız"
                 }
-                label="E-mail address"
+                label="E-mail adresi"
                 placeholder={user.email}
                 required
                 type="email"
@@ -1519,16 +1519,16 @@ class AccountTab extends Component {
             {showingField !== "email-address" && (
               <>
                 <ListItemText
-                  primary="E-mail address"
+                  primary="E-mail adresi"
                   secondary={
-                    user.email ? user.email : "You don’t have an e-mail address"
+                    user.email ? user.email : "E-mail adresinizi girmediniz"
                   }
                 />
 
                 {user.email && !user.emailVerified && (
                   <Box clone mr={7}>
                     <ListItemSecondaryAction>
-                      <Tooltip title="Verify">
+                      <Tooltip title="Onayla">
                         <div>
                           <IconButton
                             color="secondary"
@@ -1545,7 +1545,7 @@ class AccountTab extends Component {
 
                 <ListItemSecondaryAction>
                   {user.email && (
-                    <Tooltip title="Change">
+                    <Tooltip title="Değiştir">
                       <div>
                         <IconButton
                           disabled={performingAction}
@@ -1564,7 +1564,7 @@ class AccountTab extends Component {
                       variant="contained"
                       onClick={() => this.showField("email-address")}
                     >
-                      Add
+                      Ekle
                     </Button>
                   )}
                 </ListItemSecondaryAction>
@@ -1581,14 +1581,14 @@ class AccountTab extends Component {
 
             <Hidden xsDown>
               <ListItemText
-                primary="Signed in"
+                primary="Giriş yapılma tarihi"
                 secondary={moment(user.metadata.lastSignInTime).format("LLLL")}
               />
             </Hidden>
 
             <Hidden smUp>
               <ListItemText
-                primary="Signed in"
+                primary="Giriş yapılma tarihi"
                 secondary={moment(user.metadata.lastSignInTime).format("llll")}
               />
             </Hidden>
@@ -1606,8 +1606,8 @@ class AccountTab extends Component {
             </Hidden>
 
             <ListItemText
-              primary="Delete account"
-              secondary="Accounts can’t be recovered"
+              primary="Hesabı sil"
+              secondary="Yapılan işlem geri alınamaz"
             />
 
             <ListItemSecondaryAction>
@@ -1617,7 +1617,7 @@ class AccountTab extends Component {
                 variant="contained"
                 onClick={onDeleteAccountClick}
               >
-                Delete
+                Sil
               </Button>
             </ListItemSecondaryAction>
           </ListItem>

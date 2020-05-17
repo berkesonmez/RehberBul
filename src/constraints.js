@@ -1,87 +1,89 @@
 const constraints = {
-  firstName: {
-    presence: {
-      allowEmpty: false,
+    firstName: {
+        presence: {
+            allowEmpty: false,
+        },
+
+        type: "string",
     },
 
-    type: "string",
-  },
+    lastName: {
+        presence: {
+            allowEmpty: false,
+        },
 
-  lastName: {
-    presence: {
-      allowEmpty: false,
+        type: "string",
     },
 
-    type: "string",
-  },
+    username: {
+        length: {
+            minimum: 2,
+            maximum: 20,
+        },
 
-  username: {
-    length: {
-      minimum: 2,
-      maximum: 20,
+        presence: {
+            allowEmpty: false,
+        },
+
+        type: "string",
     },
 
-    presence: {
-      allowEmpty: false,
+    emailAddress: {
+        email: {
+            message: "^Geçerli bir e-mail adresi değil",
+        },
+
+        presence: {
+            allowEmpty: false,
+        },
+
+        type: "string",
     },
 
-    type: "string",
-  },
+    emailAddressConfirmation: {
+        email: {
+            message: "^Geçerli bir e-mail adresi değil",
+        },
 
-  emailAddress: {
-    email: {
-      message: "^E-mail address is invalid",
+        equality: {
+            attribute: "emailAddress",
+            message: "^Girilen e-mail adresleri aynı değil",
+        },
+
+        presence: {
+            allowEmpty: false,
+        },
+
+        type: "string",
     },
 
-    presence: {
-      allowEmpty: false,
+    password: {
+        length: {
+            minimum: 6,
+        },
+
+        presence: {
+            allowEmpty: false,
+        },
+
+        type: "string",
     },
 
-    type: "string",
-  },
+    passwordConfirmation: {
+        equality: {
+            attribute: "password",
+            message: "^Girilen şifreler aynı değil",
+        },
+        length: {
+            minimum: 6,
+        },
 
-  emailAddressConfirmation: {
-    email: {
-      message: "^E-mail address confirmation is invalid",
+        presence: {
+            allowEmpty: false,
+        },
+
+        type: "string",
     },
-
-    equality: {
-      attribute: "emailAddress",
-      message: "^E-mail address confirmation is not equal to e-mail address",
-    },
-
-    presence: {
-      allowEmpty: false,
-    },
-
-    type: "string",
-  },
-
-  password: {
-    length: {
-      minimum: 6,
-    },
-
-    presence: {
-      allowEmpty: false,
-    },
-
-    type: "string",
-  },
-
-  passwordConfirmation: {
-    equality: "password",
-
-    length: {
-      minimum: 6,
-    },
-
-    presence: {
-      allowEmpty: false,
-    },
-
-    type: "string",
-  },
 };
 
 export default constraints;

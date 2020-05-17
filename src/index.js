@@ -7,8 +7,9 @@ import "./index.css";
 import App from "./components/App";
 
 Sentry.init({
-  dsn: process.env.REACT_APP_SENTRY_DSN,
-  release: `${process.env.REACT_APP_NAME}@${process.env.REACT_APP_VERSION}`,
+    dsn: process.env.REACT_APP_SENTRY_DSN,
+    release: `${process.env.REACT_APP_NAME}@${process.env.REACT_APP_VERSION}`,
 });
+
 ReactDOM.render(<App />, document.getElementById("root"));
 serviceWorker.register();

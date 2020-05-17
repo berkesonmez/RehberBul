@@ -11,23 +11,41 @@ import EmptyState from "../EmptyState";
 import { ReactComponent as NotFoundIllustration } from "../../illustrations/not-found.svg";
 
 class NotFoundPage extends Component {
-  render() {
-    return (
-      <EmptyState
-        image={<NotFoundIllustration />}
-        title="Page doesn’t exist"
-        description="The page you’re trying to access doesn’t exist"
-        button={
-          <Fab variant="extended" color="primary" component={Link} to="/">
-            <Box clone mr={1}>
-              <HomeIcon />
-            </Box>
-            Home
-          </Fab>
-        }
-      />
-    );
-  }
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (
+            <div style={{ marginTop: "10em" }}>
+                <EmptyState
+                    image={<NotFoundIllustration />}
+                    title={
+                        this.props.title
+                            ? this.props.title
+                            : "Aradığınız sayfa bulunamadı"
+                    }
+                    description={
+                        this.props.subtitle
+                            ? this.props.subtitle
+                            : "Erişmeye çalıştığınız sayfa mevcut değil"
+                    }
+                    button={
+                        <Fab
+                            variant="extended"
+                            color="primary"
+                            component={Link}
+                            to="/"
+                        >
+                            <Box clone mr={1}>
+                                <HomeIcon />
+                            </Box>
+                            Ana Sayfa
+                        </Fab>
+                    }
+                />
+            </div>
+        );
+    }
 }
 
 export default NotFoundPage;

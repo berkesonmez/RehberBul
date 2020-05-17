@@ -9,54 +9,54 @@ import EmptyState from "../EmptyState";
 import { ReactComponent as ErrorIllustration } from "../../illustrations/error.svg";
 
 class ErrorBoundary extends Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = {
-      hasError: false,
-      eventId: null,
-    };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    Sentry.withScope((scope) => {
-      scope.setExtras(errorInfo);
-
-      const eventId = Sentry.captureException(error);
-
-      this.setState({
-        eventId: eventId,
-      });
-    });
-  }
-
-  render() {
-    // Properties
-    const { children } = this.props;
-
-    const { hasError } = this.state;
-
-    if (hasError) {
-      return (
-        <EmptyState
-          image={<ErrorIllustration />}
-          title="Something went wrong"
-          description="The app failed to load"
-        />
-      );
+        this.state = {
+            hasError: false,
+            eventId: null,
+        };
     }
 
-    return children;
-  }
+    static getDerivedStateFromError(error) {
+        return { hasError: true };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        Sentry.withScope((scope) => {
+            scope.setExtras(errorInfo);
+
+            const eventId = Sentry.captureException(error);
+
+            this.setState({
+                eventId: eventId,
+            });
+        });
+    }
+
+    render() {
+        // Properties
+        const { children } = this.props;
+
+        const { hasError } = this.state;
+
+        if (hasError) {
+            return (
+                <EmptyState
+                    image={<ErrorIllustration />}
+                    title="Bir sorun oldu"
+                    description="Uygulama yüklenemedi"
+                />
+            );
+        }
+
+        return children;
+    }
 }
 
 ErrorBoundary.propTypes = {
-  // Properties
-  children: PropTypes.array.isRequired,
+    // Properties
+    children: PropTypes.array.isRequired,
 };
 
 export default ErrorBoundary;

@@ -1,0 +1,6 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+   <ShortName>RehberBul</ShortName>
+     <Description>Rehber bulma uygulaması</Description>
+   <Image width="16" height="16">http://www.seogaste.com/favicon.ico</Image>
+   <Url type="text/html" method="GET" template="http://localhost:3000/search?q={searchTerms}" />
+</OpenSearchDescription>
