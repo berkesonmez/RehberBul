@@ -99,7 +99,7 @@ export default function FloatingActionButtons(props) {
         //     // setCategoryValue(newState[0]);
         // });
 
-        // database.ref("tours").push().set(post);
+        database.ref("tours").push().set(post);
     };
     const handleCancel = (e) => {
         setOpen(false);
@@ -131,7 +131,7 @@ export default function FloatingActionButtons(props) {
             });
             setClicked(false);
         }
-    }, [cityValue]);
+    }, [cityValue, cityInputValue]);
     return (
         <div className={classes.root}>
             <Fab
@@ -207,7 +207,7 @@ export default function FloatingActionButtons(props) {
                         required
                         id="time"
                         label="Tur uzunluğu"
-                        type="number"
+                        type="name"
                         variant="outlined"
                         helperText="Tur uzunluğunu giriniz"
                     />
@@ -252,10 +252,12 @@ export default function FloatingActionButtons(props) {
                         value={cityValue}
                         onChange={(event, newValue) => {
                             setCityValue(newValue);
+                            console.log(cityValue);
                         }}
                         inputValue={cityInputValue}
                         onInputChange={(event, newInputValue) => {
                             setCityInputValue(newInputValue);
+                            console.log(cityInputValue);
                         }}
                         noOptionsText="İl bulunamadı"
                         renderInput={(params) => (
