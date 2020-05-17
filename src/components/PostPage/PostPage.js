@@ -25,6 +25,7 @@ import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import TranslateIcon from "@material-ui/icons/Translate";
 import GroupIcon from "@material-ui/icons/Group";
 import ClassIcon from "@material-ui/icons/Class";
+import TimerIcon from "@material-ui/icons/Timer";
 
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -206,6 +207,15 @@ export default function PostCard(props) {
                         <LocalOfferIcon style={{ verticalAlign: "middle" }} />
 
                         {`  ${post.price} ₺`}
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="p"
+                    >
+                        <TimerIcon style={{ verticalAlign: "middle" }} />
+
+                        {`  ${post.time}`}
                     </Typography>
 
                     <Typography
