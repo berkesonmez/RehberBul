@@ -43,7 +43,7 @@ import {
   AccessTime as AccessTimeIcon,
   DeleteForever as DeleteForeverIcon,
 } from "@material-ui/icons";
-
+import PhoneIcon from '@material-ui/icons/Phone';
 import constraints from "../../constraints";
 import authentication from "../../services/authentication";
 
@@ -1299,13 +1299,13 @@ class AccountTab extends Component {
           <ListItem>
             <Hidden xsDown>
               <ListItemIcon>
-                <PersonIcon />
+                <PhoneIcon />
               </ListItemIcon>
             </Hidden>
 
             {!hasLastName && (
               <ListItemIcon>
-                <Tooltip title="Soyadı yok">
+                <Tooltip title="Telefon yok">
                   <WarningIcon color="error" />
                 </Tooltip>
               </ListItemIcon>
@@ -1313,7 +1313,7 @@ class AccountTab extends Component {
 
             {showingField === "last-name" && (
               <TextField
-                autoComplete="family-name"
+                autoComplete="tel"
                 autoFocus
                 disabled={performingAction}
                 error={!!(errors && errors.lastName)}
@@ -1321,12 +1321,12 @@ class AccountTab extends Component {
                 helperText={
                   errors && errors.lastName
                     ? errors.lastName[0]
-                    : "Soyadınızı değiştirmek için Enter tuşuna basınız"
+                    : "Telefon numaranızı değiştirmek için Enter tuşuna basınız"
                 }
-                label="Soyadı"
+                label="Telefon"
                 placeholder={hasLastName && userData.lastName}
                 required
-                type="text"
+                type="tel"
                 value={lastName}
                 variant="filled"
                 InputLabelProps={{ required: false }}
@@ -1339,11 +1339,11 @@ class AccountTab extends Component {
             {showingField !== "last-name" && (
               <>
                 <ListItemText
-                  primary="Soyadı"
+                  primary="Telefon numarası"
                   secondary={
                     hasLastName
                       ? userData.lastName
-                      : "Soyadınızı girmediniz"
+                      : "Telefon numaranızı girmediniz"
                   }
                 />
 

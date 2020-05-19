@@ -26,15 +26,22 @@ import TranslateIcon from "@material-ui/icons/Translate";
 import GroupIcon from "@material-ui/icons/Group";
 import ClassIcon from "@material-ui/icons/Class";
 import TimerIcon from "@material-ui/icons/Timer";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 
 import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import authentication from "../../services/authentication";
+
+import EditModal from "../EditModal";
+import { firestore } from "../../firebase";
 
 export default function PostCard(props) {
     // let { postId } = useParams();
     const [loading, setLoading] = useState(true);
     const [post, setPost] = useState([]);
+    const [owner, setOwner] = useState([]);
     const [expanded, setExpanded] = React.useState(false);
+
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
@@ -64,8 +71,16 @@ export default function PostCard(props) {
     const classes = useStyles();
 
     useEffect(() => {
-        console.log(props.postId);
-        console.log("Postpage props", props);
+        let isFirestore = false;
+        firestore
+            .collection("users")
+            .doc(props.post.ownerId)
+            .on("value", (snapshot) => {
+                const categories = snapshot.val();
+                // setPost(categories);
+                setLoading(false);
+                console.log("firestore", categories);
+            });
         database
             .ref("tours/" + props.postId)
             // .orderByChild(queryType)
@@ -80,7 +95,7 @@ export default function PostCard(props) {
                 //     newState.push(categories[category]);
                 // }
                 // console.log(newState);
-                console.log(snapshot.val());
+                console.log("Hallo", snapshot.val());
                 // setLoading(false);
                 // setCategories(newState);
                 // console.log(dataSnapshot);
@@ -94,9 +109,24 @@ export default function PostCard(props) {
                 // });
                 // setLoading(false);
             });
+        database
+            .ref("user/" + props.post.ownerId + "/profile")
+            .on("value", (snapshot) => {
+                const profile = snapshot.val();
+                console.log(post);
+                console.log("dsf", props);
+                console.log("hsdfld", profile);
+                // console.log("owner", Object.values(profile)[0]);
+                try {
+                    setOwner(Object.values(profile)[0]);
+                } catch (e) {
+                    console.log(e.message);
+                }
+                setLoading(false);
+            });
 
         // setReturnedValues(tours);
-    }, []);
+    }, [database]);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleOptions = (e) => {
         setAnchorEl(e.currentTarget);
@@ -104,15 +134,16 @@ export default function PostCard(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const handleEdit = () => {
-        setAnchorEl(null);
-    };
-    const handleDelete = () => {
+
+    const handleDelete = (e) => {
+        console.log(e.target.value);
+        database.ref("tours/" + props.postId).remove();
         setAnchorEl(null);
     };
     if (loading) {
         return <Loader />;
     }
+
     return (
         <div style={{ padding: 20 }}>
             <Card className={classes.root}>
@@ -121,9 +152,10 @@ export default function PostCard(props) {
                         <Avatar
                             aria-label="tour"
                             className={classes.avatar}
-                            src={post.profileImg}
+                            src={owner.photo}
                         >
-                            {post.fname[0]}
+                            {owner.fname ? owner.fname[0] : null}
+                            {/* {owner ? owner.fname[0] : null} */}
                         </Avatar>
                     }
                     action={
@@ -142,9 +174,6 @@ export default function PostCard(props) {
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}
                                 >
-                                    <MenuItem onClick={handleEdit}>
-                                        Düzenle
-                                    </MenuItem>
                                     <MenuItem onClick={handleDelete}>
                                         Sil
                                     </MenuItem>
@@ -160,7 +189,7 @@ export default function PostCard(props) {
                             }}
                             to={`/search?uid=${post.ownerId}`}
                         >
-                            {post.fname}
+                            {owner.fname}
                         </Link>
                     }
                     subheader={
@@ -215,7 +244,7 @@ export default function PostCard(props) {
                     >
                         <TimerIcon style={{ verticalAlign: "middle" }} />
 
-                        {`  ${post.time}`}
+                        {`  ${post.time} saat`}
                     </Typography>
 
                     <Typography
@@ -237,12 +266,12 @@ export default function PostCard(props) {
                     >
                         <PhoneIcon />
                     </IconButton>
-                    <IconButton aria-label="add to favorites">
+                    {/* <IconButton aria-label="add to favorites">
                         <FavoriteIcon />
-                    </IconButton>
-                    <IconButton aria-label="share">
+                    </IconButton> */}
+                    {/* <IconButton aria-label="share">
                         <ShareIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton
                         className={clsx(classes.expand, {
                             [classes.expandOpen]: expanded,

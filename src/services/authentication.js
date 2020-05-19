@@ -9,7 +9,8 @@ import firebase, {
 import moment from "moment";
 
 const authentication = {};
-
+// let key;
+// let referance = database.ref("user");
 authentication.signUp = (fields) => {
     return new Promise((resolve, reject) => {
         if (!fields) {
@@ -64,8 +65,17 @@ authentication.signUp = (fields) => {
                     .collection("users")
                     .doc(uid);
 
-                userDocumentReference
-                    .set({
+                userDocumentReference.set({
+                    firstName: firstName,
+                    lastName: lastName,
+                    username: username,
+                });
+
+                database
+                    .ref("user")
+                    .child(uid)
+                    .child("profile")
+                    .push({
                         firstName: firstName,
                         lastName: lastName,
                         username: username,
@@ -80,28 +90,8 @@ authentication.signUp = (fields) => {
                     .catch((reason) => {
                         reject(reason);
                     });
-
-                database
-                    .ref("user")
-                    .push()
-                    .ref("profile")
-                    .key()
-                    .set({
-                        a: "berke",
-                        // firstName: firstName,
-                        // lastName: lastName,
-                        // username: username,
-                    })
-                    .then((value) => {
-                        analytics.logEvent("sign_up", {
-                            method: "password",
-                        });
-
-                        resolve(value);
-                    })
-                    .catch((reason) => {
-                        reject(reason);
-                    });
+                // key = ref.name();
+                // referance = ref;
             })
             .catch((reason) => {
                 reject(reason);
@@ -145,8 +135,14 @@ authentication.signUpWithEmailAddressAndPassword = (emailAddress, password) => {
                     .collection("users")
                     .doc(uid);
 
-                userDocumentReference
-                    .set({}, { merge: true })
+                userDocumentReference.set({}, { merge: true });
+
+                database
+                    .ref("user")
+                    .child(uid)
+                    .child("profile")
+                    .push()
+                    .update({ email: emailAddress })
                     .then((value) => {
                         analytics.logEvent("sign_up", {
                             method: "password",
@@ -666,17 +662,36 @@ authentication.changeFirstName = (firstName) => {
 
         const userDocumentReference = firestore.collection("users").doc(uid);
 
-        userDocumentReference
-            .update({
-                firstName: firstName,
-            })
-            .then((value) => {
-                analytics.logEvent("change_first_name");
+        userDocumentReference.update({
+            firstName: firstName,
+        });
 
-                resolve(value);
-            })
-            .catch((reason) => {
-                reject(reason);
+        database
+            .ref("user")
+            .child(uid)
+            .child("profile")
+            .once("value", (k) => {
+                // console.log("1", k);
+                // let values = k.val();
+                let profileId = Object.keys(k.val())[0];
+                // console.log("2", k.key);
+                // console.log("3", values[profileId].fname);
+                // console.log("3", values);
+                // console.log("id", profileId);
+                database
+                    .ref("user")
+                    .child(uid)
+                    .child("profile")
+                    .child(profileId)
+                    .update({ fname: firstName })
+                    .then((value) => {
+                        analytics.logEvent("change_first_name");
+
+                        resolve(value);
+                    })
+                    .catch((reason) => {
+                        reject(reason);
+                    });
             });
     });
 };
@@ -707,17 +722,38 @@ authentication.changeLastName = (lastName) => {
 
         const userDocumentReference = firestore.collection("users").doc(uid);
 
-        userDocumentReference
-            .update({
-                lastName: lastName,
-            })
-            .then((value) => {
-                analytics.logEvent("change_last_name");
+        userDocumentReference.update({
+            lastName: lastName,
+        });
 
-                resolve(value);
-            })
-            .catch((reason) => {
-                reject(reason);
+        database
+            .ref("user")
+            .child(uid)
+            .child("profile")
+            .once("value", (k) => {
+                // console.log("1", k);
+                // console.log("2", k.key);
+                let values = k.val();
+                let profileId = Object.keys(k.val())[0];
+                let firstName = values[profileId].fname;
+
+                console.log("id", profileId);
+                database
+                    .ref("user")
+                    .child(uid)
+                    .child("profile")
+                    .child(profileId)
+                    .update({
+                        phone: lastName,
+                    })
+                    .then((value) => {
+                        analytics.logEvent("change_first_name");
+
+                        resolve(value);
+                    })
+                    .catch((reason) => {
+                        reject(reason);
+                    });
             });
     });
 };
@@ -748,17 +784,37 @@ authentication.changeUsername = (username) => {
 
         const userDocumentReference = firestore.collection("users").doc(uid);
 
-        userDocumentReference
-            .update({
-                username: username,
-            })
-            .then((value) => {
-                analytics.logEvent("change_username");
+        userDocumentReference.update({
+            username: username,
+        });
+        database
+            .ref("user")
+            .child(uid)
+            .child("profile")
+            .once("value", (k) => {
+                // console.log("1", k);
+                // console.log("2", k.key);
+                let values = k.val();
+                let profileId = Object.keys(k.val())[0];
+                let firstName = values[profileId].fname;
 
-                resolve(value);
-            })
-            .catch((reason) => {
-                reject(reason);
+                console.log("id", profileId);
+                database
+                    .ref("user")
+                    .child(uid)
+                    .child("profile")
+                    .child(profileId)
+                    .update({
+                        username: username,
+                    })
+                    .then((value) => {
+                        analytics.logEvent("change_first_name");
+
+                        resolve(value);
+                    })
+                    .catch((reason) => {
+                        reject(reason);
+                    });
             });
     });
 };
@@ -787,15 +843,34 @@ authentication.changeEmailAddress = (emailAddress) => {
             return;
         }
 
-        currentUser
-            .updateEmail(emailAddress)
-            .then((value) => {
-                analytics.logEvent("change_email_address");
+        currentUser.updateEmail(emailAddress);
+        database
+            .ref("user")
+            .child(uid)
+            .child("profile")
+            .once("value", (k) => {
+                // console.log("1", k);
+                // console.log("2", k.key);
+                let values = k.val();
+                let profileId = Object.keys(k.val())[0];
 
-                resolve(value);
-            })
-            .catch((reason) => {
-                reject(reason);
+                console.log("id", profileId);
+                database
+                    .ref("user")
+                    .child(uid)
+                    .child("profile")
+                    .child(profileId)
+                    .update({
+                        email: emailAddress,
+                    })
+                    .then((value) => {
+                        analytics.logEvent("change_email_address");
+
+                        resolve(value);
+                    })
+                    .catch((reason) => {
+                        reject(reason);
+                    });
             });
     });
 };
@@ -831,17 +906,37 @@ authentication.changePassword = (password) => {
                     .collection("users")
                     .doc(uid);
 
-                userDocumentReference
-                    .update({
-                        lastPasswordChange: firebase.firestore.FieldValue.serverTimestamp(),
-                    })
-                    .then((value) => {
-                        analytics.logEvent("change_password");
+                userDocumentReference.update({
+                    lastPasswordChange: firebase.firestore.FieldValue.serverTimestamp(),
+                });
+                database
+                    .ref("user")
+                    .child(uid)
+                    .child("profile")
+                    .once("value", (k) => {
+                        // console.log("1", k);
+                        // console.log("2", k.key);
+                        // let values = k.val();
+                        let profileId = Object.keys(k.val())[0];
 
-                        resolve(value);
-                    })
-                    .catch((reason) => {
-                        reject(reason);
+                        console.log("id", profileId);
+                        database
+                            .ref("user")
+                            .child(uid)
+                            .child("profile")
+                            .child(profileId)
+                            .update({
+                                lastPasswordChange:
+                                    firebase.database.ServerValue.TIMESTAMP,
+                            })
+                            .then((value) => {
+                                analytics.logEvent("change_password");
+
+                                resolve(value);
+                            })
+                            .catch((reason) => {
+                                reject(reason);
+                            });
                     });
             })
             .catch((reason) => {
@@ -1003,7 +1098,12 @@ authentication.getNameInitials = (fields) => {
     const displayName = fields.displayName;
 
     if (firstName && lastName) {
-        return firstName.charAt(0) + lastName.charAt(0);
+        let name = firstName.split(" ");
+        if (name.length > 1) {
+            return name[0][0] + name[1][0];
+        } else {
+            return firstName.charAt(0);
+        }
     }
 
     if (firstName) {
@@ -1015,7 +1115,7 @@ authentication.getNameInitials = (fields) => {
     }
 
     if (lastName) {
-        return lastName.charAt(0);
+        return firstName.charAt(0);
     }
 
     if (displayName) {

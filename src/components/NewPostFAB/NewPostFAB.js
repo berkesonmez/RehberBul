@@ -51,7 +51,6 @@ export default function FloatingActionButtons(props) {
     const [post, setPost] = useState({
         category: "",
         city: "Adana",
-        fname: "",
         groupSize: 1,
         isCultural: "",
         isNatural: "",
@@ -79,7 +78,7 @@ export default function FloatingActionButtons(props) {
             ...post,
             ownerId: props.user.uid,
             profileImg: props.user.photoURL ? props.user.photoURL : "",
-            fname: props.user.firstName ? props.user.firstName : "",
+            firestore: true,
         });
         setOpen(true);
     };
@@ -150,6 +149,7 @@ export default function FloatingActionButtons(props) {
             setClicked(false);
         }
     }, [cityInputValue]);
+
     return (
         <div className={classes.root}>
             <Fab

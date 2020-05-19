@@ -157,9 +157,9 @@ function Search(props) {
         <>
             <div style={{ padding: 20 }}>
                 <Grid container spacing={4}>
-                    <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                         <h1 className={classes.root}>{headerString}</h1>
-                    </Grid>
+                    </Grid> */}
                     {/* <form className={classes.root} noValidate autoComplete="off">
                     <div>
                         <TextField id="standard-basic" label="Standard" />
@@ -236,6 +236,7 @@ function Search(props) {
                                 <PostPage
                                     key={value.childKey}
                                     postId={value.childKey}
+                                    post={value}
                                     user={props.user}
                                 />
                             </Grid>

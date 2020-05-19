@@ -104,10 +104,11 @@ class SignUpDialog extends Component {
                             password
                         )
                         .then((value) => {
+                            console.log("value", value);
                             this.props.dialogProps.onClose();
                         })
                         .catch((reason) => {
-                            console.log(reason);
+                            console.log("reason", reason);
                             const code = reason.code;
                             const message = reason.message;
 
@@ -120,7 +121,7 @@ class SignUpDialog extends Component {
                                     return;
 
                                 default:
-                                    this.props.openSnackbar(message);
+                                    this.props.openSnackbar(code, message);
                                     return;
                             }
                         })
