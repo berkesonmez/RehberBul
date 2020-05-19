@@ -275,10 +275,6 @@ export default function FloatingActionButtons(props) {
                                         {v.il}
                                     </MenuItem>
                                 );
-
-                                {
-                                    /* console.log(v.il, v.plaka); */
-                                }
                             })}
                             {/* <MenuItem value={20}>Twenty</MenuItem>
                             <MenuItem value={30}>Thirty</MenuItem> */}
@@ -287,79 +283,7 @@ export default function FloatingActionButtons(props) {
                             Gezinin yer aldığı şehiri seçiniz
                         </FormHelperText>
                     </FormControl>
-                    {/* <Autocomplete
-                        id="location"
-                        // style={{ width: 300 }}
-                        fullWidth
-                        options={iller}
-                        // classes={{
-                        //     option: classes.option,
-                        // }}
-                        autoHighlight
-                        getOptionLabel={(option) => option.il}
-                        value={cityValue}
-                        onChange={(event, newValue) => {
-                            setCityValue(newValue);
-                            console.log(cityValue);
-                        }}
-                        inputValue={cityInputValue}
-                        onInputChange={(event, newInputValue) => {
-                            setClicked(true);
-                            setCityInputValue(newInputValue);
-                            console.log(cityInputValue);
-                        }}
-                        noOptionsText="İl bulunamadı"
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Şehirler"
-                                variant="outlined"
-                                fullWidth
-                                helperText="Gezinin yer aldığı şehiri seçiniz"
-                                inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: "new-password", // disable autocomplete and autofill
-                                }}
-                            />
-                        )}
-                    /> */}
-                    {/* Yedek */}
-                    {/* <Autocomplete
-                        value={cityValue}
-                        onChange={(event, newValue) => {
-                            setCityValue(newValue);
-                        }}
-                        inputValue={cityInputValue}
-                        onInputChange={(event, newInputValue) => {
-                            console.log("önce", cityValue);
-                            setPost({
-                                ...post,
-                                city: cityValue.il,
-                                tCityId: "p" + cityValue.plaka,
-                            });
-                            console.log("sonra", cityValue);
-                            setCityInputValue(newInputValue);
-                        }}
-                        noOptionsText="İl bulunamadı"
-                        id="locations"
-                        options={iller}
-                        getOptionLabel={(option) => option.il}
-                        style={{
-                            // width: 300,
-                            marginTop: "1em",
-                            marginBottom: "1em",
-                        }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                required
-                                label="Şehirler"
-                                fullWidth
-                                variant="outlined"
-                                helperText="Gezinin yer aldığı şehiri seçiniz"
-                            />
-                        )}
-                    /> */}
+
                     <Autocomplete
                         // margin="dense"
                         value={categoryValue}
