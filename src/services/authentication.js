@@ -315,59 +315,101 @@ authentication.signInWithAuthProvider = (providerId) => {
             return;
         }
 
-        auth.signInWithPopup(provider)
-            .then((value) => {
-                const user = value.user;
+        auth.signInWithPopup(provider).then((value) => {
+            const user = value.user;
 
-                if (!user) {
-                    reject();
+            if (!user) {
+                reject();
 
-                    return;
-                }
+                return;
+            }
 
-                const uid = user.uid;
+            const uid = user.uid;
 
-                if (!uid) {
-                    reject();
+            if (!uid) {
+                reject();
 
-                    return;
-                }
+                return;
+            }
+            console.log("hello", user);
+            console.log("hello", user.email);
+            const userDocumentReference = firestore
+                .collection("users")
+                .doc(uid);
 
-                const userDocumentReference = firestore
-                    .collection("users")
-                    .doc(uid);
-
-                userDocumentReference
-                    .get({ source: "server" })
-                    .then((value) => {
-                        if (value.exists) {
-                            analytics.logEvent("login", {
-                                method: providerId,
-                            });
-
-                            resolve(user);
-                        } else {
-                            userDocumentReference
-                                .set({}, { merge: true })
-                                .then((value) => {
-                                    analytics.logEvent("login", {
-                                        method: providerId,
-                                    });
-
-                                    resolve(user);
-                                })
-                                .catch((reason) => {
-                                    reject(reason);
+            database
+                .ref("user")
+                .child(uid)
+                .child("profile")
+                .once("value", (k) => {
+                    // console.log("1", k);
+                    // let values = k.val();
+                    // console.log("2", k.key);
+                    // console.log("3", values[profileId].);
+                    // console.log("3", values);
+                    // console.log("id", profileId);
+                    console.log("Hello");
+                    console.log(k, k.exists());
+                    if (!k.exists()) {
+                        // let profileId = Object.keys(k.val())[0];
+                        database
+                            .ref("user")
+                            .child(uid)
+                            .child("profile")
+                            .push()
+                            .update({ email: user.email })
+                            .then((value) => {
+                                analytics.logEvent("login", {
+                                    method: providerId,
                                 });
-                        }
-                    })
-                    .catch((reason) => {
-                        reject(reason);
+
+                                resolve(user);
+                            })
+                            .catch((reason) => {
+                                reject(reason);
+                            });
+                    } else {
+                        analytics.logEvent("login", {
+                            method: providerId,
+                        });
+
+                        resolve(user);
+                    }
+                })
+                .then((value) => {
+                    analytics.logEvent("login", {
+                        method: providerId,
                     });
-            })
-            .catch((reason) => {
-                reject(reason);
+
+                    resolve(user);
+                })
+                .catch((reason) => {
+                    reject(reason);
+                });
+            userDocumentReference.get({ source: "server" }).then((value) => {
+                if (value.exists) {
+                    // analytics.logEvent("login", {
+                    //     method: providerId,
+                    // });
+                    // resolve(user);
+                } else {
+                    userDocumentReference.set({}, { merge: true });
+                    // .then((value) => {
+                    //     analytics.logEvent("login", {
+                    //         method: providerId,
+                    //     });
+
+                    //     resolve(user);
+                    // })
+                    // .catch((reason) => {
+                    //     reject(reason);
+                    // });
+                }
             });
+            // .catch((reason) => {
+            //     reject(reason);
+            // });
+        });
     });
 };
 
@@ -558,8 +600,9 @@ authentication.changeAvatar = (avatar) => {
         const avatarReference = storage
             .ref()
             .child("images")
-            .child("avatars")
+            .child(uid)
             .child(uid);
+        // .child("avatars");
 
         avatarReference
             .put(avatar)
@@ -567,15 +610,40 @@ authentication.changeAvatar = (avatar) => {
                 avatarReference
                     .getDownloadURL()
                     .then((value) => {
-                        currentUser
-                            .updateProfile({
-                                photoURL: value,
-                            })
-                            .then((value) => {
-                                analytics.logEvent("change_avatar");
+                        currentUser.updateProfile({
+                            photoURL: value,
+                        });
+                        database
+                            .ref("user")
+                            .child(uid)
+                            .child("profile")
+                            .once("value", (k) => {
+                                // console.log("1", k);
+                                // console.log("2", k.key);
+                                let values = k.val();
+                                let profileId = Object.keys(k.val())[0];
+                                // let firstName = values[profileId].fname;
 
-                                resolve(value);
+                                console.log("id", profileId);
+                                console.log("url", value);
+                                database
+                                    .ref("user")
+                                    .child(uid)
+                                    .child("profile")
+                                    .child(profileId)
+                                    .update({
+                                        photo: value,
+                                    })
+                                    .then((value) => {
+                                        analytics.logEvent("change_avatar");
+
+                                        resolve(value);
+                                    })
+                                    .catch((reason) => {
+                                        reject(reason);
+                                    });
                             })
+
                             .catch((reason) => {
                                 reject(reason);
                             });
@@ -615,9 +683,9 @@ authentication.removeAvatar = () => {
             .then((value) => {
                 const avatarReference = storage
                     .ref()
-                    .child("images")
-                    .child("avatars")
-                    .child(uid);
+                        .child("images")
+                        .child(uid)
+                        .child(uid);
 
                 avatarReference
                     .delete()
@@ -909,6 +977,10 @@ authentication.changePassword = (password) => {
                 userDocumentReference.update({
                     lastPasswordChange: firebase.firestore.FieldValue.serverTimestamp(),
                 });
+
+                let profId;
+
+                const setProfileId = (id) => (profId = id);
                 database
                     .ref("user")
                     .child(uid)
@@ -918,7 +990,7 @@ authentication.changePassword = (password) => {
                         // console.log("2", k.key);
                         // let values = k.val();
                         let profileId = Object.keys(k.val())[0];
-
+                        setProfileId(profileId);
                         console.log("id", profileId);
                         database
                             .ref("user")
@@ -937,6 +1009,14 @@ authentication.changePassword = (password) => {
                             .catch((reason) => {
                                 reject(reason);
                             });
+                    })
+                    .then((value) => {
+                        analytics.logEvent("change_password");
+
+                        resolve(value);
+                    })
+                    .catch((reason) => {
+                        reject(reason);
                     });
             })
             .catch((reason) => {
@@ -1061,7 +1141,7 @@ authentication.getName = (fields) => {
     }
 
     if (lastName) {
-        return lastName;
+        return firstName;
     }
 
     return null;
@@ -1077,7 +1157,7 @@ authentication.getFullName = (fields) => {
     const displayName = fields.displayName;
 
     if (firstName && lastName) {
-        return `${firstName} ${lastName}`;
+        return `${firstName}`;
     }
 
     if (displayName) {

@@ -205,7 +205,9 @@ class SignInDialog extends Component {
                                 case "auth/user-disabled":
                                 case "auth/user-not-found":
                                 case "auth/wrong-password":
-                                    this.props.openSnackbar(message);
+                                    this.props.openSnackbar(
+                                        "Şifre doğru değildir."
+                                    );
                                     return;
 
                                 default:

@@ -28,7 +28,7 @@ import ClassIcon from "@material-ui/icons/Class";
 import TimerIcon from "@material-ui/icons/Timer";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-
+import EmailIcon from "@material-ui/icons/Email";
 import Menu from "@material-ui/core/Menu";
 import authentication from "../../services/authentication";
 
@@ -36,6 +36,7 @@ import EditModal from "../EditModal";
 import { firestore } from "../../firebase";
 
 export default function PostCard(props) {
+    console.log("props", props);
     // let { postId } = useParams();
     const [loading, setLoading] = useState(true);
     const [post, setPost] = useState([]);
@@ -72,15 +73,15 @@ export default function PostCard(props) {
 
     useEffect(() => {
         let isFirestore = false;
-        firestore
-            .collection("users")
-            .doc(props.post.ownerId)
-            .on("value", (snapshot) => {
-                const categories = snapshot.val();
-                // setPost(categories);
-                setLoading(false);
-                console.log("firestore", categories);
-            });
+        // firestore
+        //     .collection("users")
+        //     .doc(props.post.ownerId)
+        //     .on("value", (snapshot) => {
+        //         const categories = snapshot.val();
+        //         // setPost(categories);
+        //         setLoading(false);
+        //         console.log("firestore", categories);
+        //     });
         database
             .ref("tours/" + props.postId)
             // .orderByChild(queryType)
@@ -146,157 +147,178 @@ export default function PostCard(props) {
 
     return (
         <div style={{ padding: 20 }}>
-            <Card className={classes.root}>
-                <CardHeader
-                    avatar={
-                        <Avatar
-                            aria-label="tour"
-                            className={classes.avatar}
-                            src={owner.photo}
-                        >
-                            {owner.fname ? owner.fname[0] : null}
-                            {/* {owner ? owner.fname[0] : null} */}
-                        </Avatar>
-                    }
-                    action={
-                        props.user ? (
-                            <>
-                                <IconButton
-                                    aria-label="settings"
-                                    onClick={handleOptions}
-                                >
-                                    <MoreVertIcon />
-                                </IconButton>
-                                <Menu
-                                    id="simple-menu"
-                                    anchorEl={anchorEl}
-                                    keepMounted
-                                    open={Boolean(anchorEl)}
-                                    onClose={handleClose}
-                                >
-                                    <MenuItem onClick={handleDelete}>
-                                        Sil
-                                    </MenuItem>
-                                </Menu>
-                            </>
-                        ) : null
-                    }
-                    title={
-                        <Link
-                            style={{
-                                color: "inherit",
-                                textDecoration: "inherit",
-                            }}
-                            to={`/search?uid=${post.ownerId}`}
-                        >
-                            {owner.fname}
-                        </Link>
-                    }
-                    subheader={
-                        <Link
-                            style={{
-                                color: "inherit",
-                                textDecoration: "inherit",
-                            }}
-                            to={`/search?l=${post.tCityId}`}
-                        >
-                            {post.city}
-                        </Link>
-                    }
-                />
-                <CardMedia
-                    className={classes.media}
-                    image={post.tourImage}
-                    title="tour"
-                />
-                <CardContent>
-                    <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        component="p"
-                    >
-                        <ClassIcon style={{ verticalAlign: "middle" }} />
-
-                        {`  ${post.category}`}
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        component="p"
-                    >
-                        <GroupIcon style={{ verticalAlign: "middle" }} />
-
-                        {`  ${post.groupSize} kişi`}
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        component="p"
-                    >
-                        <LocalOfferIcon style={{ verticalAlign: "middle" }} />
-
-                        {`  ${post.price} ₺`}
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        component="p"
-                    >
-                        <TimerIcon style={{ verticalAlign: "middle" }} />
-
-                        {`  ${post.time} saat`}
-                    </Typography>
-
-                    <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        component="p"
-                    >
-                        <TranslateIcon style={{ verticalAlign: "middle" }} />
-
-                        {`  ${post.language}`}
-                    </Typography>
-                </CardContent>
-                <CardActions disableSpacing>
-                    <IconButton
-                        onClick={() =>
-                            (window.location.href = `tel:${post.phone}`)
+            {post ? (
+                <Card className={classes.root}>
+                    <CardHeader
+                        avatar={
+                            <Avatar
+                                aria-label="tour"
+                                className={classes.avatar}
+                                src={owner.photo}
+                            >
+                                {owner.fname ? owner.fname[0] : null}
+                                {/* {owner ? owner.fname[0] : null} */}
+                            </Avatar>
                         }
-                        aria-label="Call"
-                    >
-                        <PhoneIcon />
-                    </IconButton>
-                    {/* <IconButton aria-label="add to favorites">
-                        <FavoriteIcon />
-                    </IconButton> */}
-                    {/* <IconButton aria-label="share">
-                        <ShareIcon />
-                    </IconButton> */}
-                    <IconButton
-                        className={clsx(classes.expand, {
-                            [classes.expandOpen]: expanded,
-                        })}
-                        onClick={handleExpandClick}
-                        aria-expanded={expanded}
-                        aria-label="show more"
-                    >
-                        <ExpandMoreIcon />
-                    </IconButton>
-                </CardActions>
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                        action={
+                            props.user &&
+                            props.user.uid === props.post.ownerId ? (
+                                <>
+                                    <IconButton
+                                        aria-label="settings"
+                                        onClick={handleOptions}
+                                    >
+                                        <MoreVertIcon />
+                                    </IconButton>
+                                    <Menu
+                                        id="simple-menu"
+                                        anchorEl={anchorEl}
+                                        keepMounted
+                                        open={Boolean(anchorEl)}
+                                        onClose={handleClose}
+                                    >
+                                        <MenuItem onClick={handleDelete}>
+                                            Sil
+                                        </MenuItem>
+                                    </Menu>
+                                </>
+                            ) : null
+                        }
+                        title={
+                            <Link
+                                style={{
+                                    color: "inherit",
+                                    textDecoration: "inherit",
+                                }}
+                                to={
+                                    post.ownerId
+                                        ? `/search?uid=${post.ownerId}`
+                                        : `/`
+                                }
+                            >
+                                {owner.fname}
+                            </Link>
+                        }
+                        subheader={
+                            <Link
+                                style={{
+                                    color: "inherit",
+                                    textDecoration: "inherit",
+                                }}
+                                to={`/search?l=${post.tCityId}`}
+                            >
+                                {post.city}
+                            </Link>
+                        }
+                    />
+                    <CardMedia
+                        className={classes.media}
+                        image={post.tourImage}
+                        title="tour"
+                    />
                     <CardContent>
-                        <Typography paragraph>Kişisel Bilgiler:</Typography>
-                        <Typography paragraph>{post.personalDetail}</Typography>
-                        <Typography paragraph>Tur Planı:</Typography>
                         <Typography
-                            paragraph
-                            style={{ display: "inline-block" }}
+                            variant="body2"
+                            color="textSecondary"
+                            component="p"
                         >
-                            {post.tourPlan}
+                            <ClassIcon style={{ verticalAlign: "middle" }} />
+
+                            {`  ${post.category}`}
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            component="p"
+                        >
+                            <GroupIcon style={{ verticalAlign: "middle" }} />
+
+                            {`  ${post.groupSize} kişi`}
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            component="p"
+                        >
+                            <LocalOfferIcon
+                                style={{ verticalAlign: "middle" }}
+                            />
+
+                            {`  ${post.price} ₺`}
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            component="p"
+                        >
+                            <TimerIcon style={{ verticalAlign: "middle" }} />
+
+                            {`  ${post.time} saat`}
+                        </Typography>
+
+                        <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            component="p"
+                        >
+                            <TranslateIcon
+                                style={{ verticalAlign: "middle" }}
+                            />
+
+                            {`  ${post.language}`}
                         </Typography>
                     </CardContent>
-                </Collapse>
-            </Card>
+                    <CardActions disableSpacing>
+                        <IconButton
+                            onClick={() =>
+                                (window.location.href = `tel:${owner.phone}`)
+                            }
+                            aria-label="Call"
+                        >
+                            <PhoneIcon />
+                        </IconButton>
+                        <IconButton
+                            onClick={() =>
+                                (window.location.href = `mailto:${owner.email}`)
+                            }
+                            aria-label="Email"
+                        >
+                            <EmailIcon />
+                        </IconButton>
+                        {/* <IconButton aria-label="add to favorites">
+                        <FavoriteIcon />
+                    </IconButton> */}
+                        {/* <IconButton aria-label="share">
+                        <ShareIcon />
+                    </IconButton> */}
+                        <IconButton
+                            className={clsx(classes.expand, {
+                                [classes.expandOpen]: expanded,
+                            })}
+                            onClick={handleExpandClick}
+                            aria-expanded={expanded}
+                            aria-label="show more"
+                        >
+                            <ExpandMoreIcon />
+                        </IconButton>
+                    </CardActions>
+                    <Collapse in={expanded} timeout="auto" unmountOnExit>
+                        <CardContent>
+                            <Typography paragraph>Kişisel Bilgiler:</Typography>
+                            <Typography paragraph>
+                                {post.personalDetail}
+                            </Typography>
+                            <Typography paragraph>Tur Planı:</Typography>
+                            <Typography
+                                paragraph
+                                style={{ display: "inline-block" }}
+                            >
+                                {post.tourPlan}
+                            </Typography>
+                        </CardContent>
+                    </Collapse>
+                </Card>
+            ) : null}
 
             {/* <Grid item xs={12} md={2}>
                     <h1>Hello {post.fname}</h1>

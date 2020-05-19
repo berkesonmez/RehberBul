@@ -155,7 +155,7 @@ class AccountTab extends Component {
           .changeAvatar(avatar)
           .then((value) => {
             const { user, userData } = this.props;
-
+            console.log("props Account", this.props)
             this.setState({
               profileCompletion: authentication.getProfileCompletion({
                 ...user,

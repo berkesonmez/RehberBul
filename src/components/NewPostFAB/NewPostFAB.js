@@ -56,15 +56,15 @@ export default function FloatingActionButtons(props) {
         isNatural: "",
         isNightlife: "",
         isPhotography: "",
-        language: "",
+        language: "Türkçe",
         ownerId: "",
         personalDetail: "",
-        phone: "",
-        price: 0,
-        profileImg: "",
+        // phone: "",
+        price: "Ücretsiz",
+        // profileImg: "",
         tCategoryId: "",
         tCityId: "p1",
-        time: "",
+        time: "1",
         tourImage: "",
         tourName: "",
         tourPlan: "",
@@ -243,7 +243,7 @@ export default function FloatingActionButtons(props) {
                         variant="outlined"
                         helperText="Gezide kullanacağınız dili seçiniz"
                     />
-                    <TextField
+                    {/* <TextField
                         value={post.phone}
                         onChange={(e) => {
                             setPost({ ...post, phone: e.target.value });
@@ -256,7 +256,7 @@ export default function FloatingActionButtons(props) {
                         type="name"
                         variant="outlined"
                         helperText="Telefon numaranızı giriniz"
-                    />
+                    /> */}
                     <FormControl variant="outlined" fullWidth>
                         <InputLabel id="locationLabel">Şehir</InputLabel>
                         <Select

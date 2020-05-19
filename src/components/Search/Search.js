@@ -130,10 +130,20 @@ function Search(props) {
                         const childData = childSnapshot.val();
                         tours.push({ childKey: childKey, ...childData });
                         // console.log({ childKey: childKey, ...childData });
-                        console.log(dataSnapshot.val());
-                        setHeaderString(childData[queryStr] + " " + headerStr);
+                        console.log("data", dataSnapshot.val());
+                        console.log("child", childSnapshot.val());
+                        if (queryParam === "uid") {
+                            setHeaderString(
+                                childData[queryStr] + " " + headerStr
+                            );
+                        } else {
+                            setHeaderString(
+                                childData[queryStr] + " " + headerStr
+                            );
+                        }
                     });
                     setLoading(false);
+                    setNoResult(false);
                 } else {
                     console.log("Sonuç yok");
                     setLoading(false);
@@ -141,6 +151,12 @@ function Search(props) {
                 }
             });
         setReturnedValues(tours);
+        // if (queryParam === "uid") {
+        //     database.ref('user').child(queryId)
+        //     setHeaderString(
+        //         // childData[queryStr] + " " + headerStr
+        //     );
+        // }
     }, [props, database]);
     if (loading) {
         return <Loader />;
@@ -159,68 +175,6 @@ function Search(props) {
                 <Grid container spacing={4}>
                     {/* <Grid item xs={12}>
                         <h1 className={classes.root}>{headerString}</h1>
-                    </Grid> */}
-                    {/* <form className={classes.root} noValidate autoComplete="off">
-                    <div>
-                        <TextField id="standard-basic" label="Standard" />
-                        <TextField
-                            id="filled-basic"
-                            label="Filled"
-                            variant="filled"
-                        />
-                        <TextField
-                            id="outlined-basic"
-                            label="Outlined"
-                            variant="outlined"
-                        />
-                    </div>
-                </form> */}
-                    {/* <Dialog
-                        // fullScreen={fullScreen}
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="responsive-dialog-title"
-                    >
-                        <DialogTitle id="responsive-dialog-title">
-                            {"Use Google's location service?"}
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Let Google help apps determine location. This
-                                means sending anonymous location data to Google,
-                                even when no apps are running.
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button
-                                autoFocus
-                                onClick={handleClose}
-                                color="primary"
-                            >
-                                Disagree
-                            </Button>
-                            <Button
-                                onClick={handleClose}
-                                color="primary"
-                                autoFocus
-                            >
-                                Agree
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                    <Grid item xs={12} md={12}>
-                        <div className={classes.root}>
-                            <Chip
-                                avatar={<CategoryIcon />}
-                                label="Kategoriler"
-                                onClick={handleClickOpen}
-                            />
-                            <Chip
-                                avatar={<DateRangeIcon />}
-                                label="Tarih Aralığı"
-                                onClick={handleClickOpen}
-                            />
-                        </div>
                     </Grid> */}
 
                     {returnedValues.map((value, id) => {
@@ -244,9 +198,6 @@ function Search(props) {
                     })}
                 </Grid>
             </div>
-            {/* <Grid container spacing={1}>
-                    <Categories categories={categories} />
-                </Grid> */}
         </>
     );
 }

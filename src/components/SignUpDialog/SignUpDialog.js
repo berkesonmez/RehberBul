@@ -149,7 +149,9 @@ class SignUpDialog extends Component {
                             const emailAddress = user.email;
 
                             this.props.openSnackbar(
-                                `Signed in as ${displayName || emailAddress}`
+                                `${
+                                    displayName || emailAddress
+                                } olarak giriş yapıldı`
                             );
                         });
                     })

@@ -3,7 +3,7 @@ import camelCase from "camelcase";
 import { createMuiTheme } from "@material-ui/core/styles";
 // import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import firebase, { analytics, auth, firestore } from "../firebase";
+import firebase, { analytics, auth, firestore, database } from "../firebase";
 
 import {
     red,
@@ -280,13 +280,65 @@ appearance.changeTheme = (theme) => {
 
         const userDocumentReference = firestore.collection("users").doc(uid);
 
-        userDocumentReference
-            .update({
-                theme: {
-                    primaryColor: primaryColor.id,
-                    secondaryColor: secondaryColor.id,
-                    dark: dark,
-                },
+        userDocumentReference.update({
+            theme: {
+                primaryColor: primaryColor.id,
+                secondaryColor: secondaryColor.id,
+                dark: dark,
+            },
+        });
+
+        // database
+        //     .ref("user")
+        //     .child(uid)
+        //     .child("profile")
+        //     .push()
+        //     .update({
+        //         theme: {
+        //             primaryColor: primaryColor.id,
+        //             secondaryColor: secondaryColor.id,
+        //             dark: dark,
+        //             // username: user.username,
+        //             // fname: user.firstName,
+        //         },
+        //     })
+
+        database
+            .ref("user")
+            .child(uid)
+            .child("profile")
+            .once("value", (k) => {
+                // console.log("1", k);
+                // let values = k.val();
+                let profileId = Object.keys(k.val())[0];
+                // console.log("2", k.key);
+                // console.log("3", values[profileId].fname);
+                // console.log("3", values);
+                // console.log("id", profileId);
+                database
+                    .ref("user")
+                    .child(uid)
+                    .child("profile")
+                    .child(profileId)
+                    .update({
+                        theme: {
+                            primaryColor: primaryColor.id,
+                            secondaryColor: secondaryColor.id,
+                            dark: dark,
+                            // username: user.username,
+                            // fname: user.firstName,
+                        },
+                    })
+                    .then((value) => {
+                        analytics.logEvent("change_theme", {
+                            theme: theme,
+                        });
+
+                        resolve(value);
+                    })
+                    .catch((reason) => {
+                        reject(reason);
+                    });
             })
             .then((value) => {
                 analytics.logEvent("change_theme", {
@@ -335,9 +387,40 @@ appearance.changePrimaryColor = (primaryColor) => {
 
         const userDocumentReference = firestore.collection("users").doc(uid);
 
-        userDocumentReference
-            .update({
-                "theme.primaryColor": primaryColor.id,
+        userDocumentReference.update({
+            "theme.primaryColor": primaryColor.id,
+        });
+
+        database
+            .ref("user")
+            .child(uid)
+            .child("profile")
+            .once("value", (k) => {
+                // console.log("1", k);
+                // let values = k.val();
+                let profileId = Object.keys(k.val())[0];
+                // console.log("2", k.key);
+                // console.log("3", values[profileId].fname);
+                // console.log("3", values);
+                // console.log("id", profileId);
+                database
+                    .ref("user")
+                    .child(uid)
+                    .child("profile")
+                    .child(profileId)
+                    .update({
+                        primaryColor: primaryColor.id,
+                    })
+                    .then((value) => {
+                        analytics.logEvent("change_primary_color", {
+                            primaryColor: primaryColor.id,
+                        });
+
+                        resolve(value);
+                    })
+                    .catch((reason) => {
+                        reject(reason);
+                    });
             })
             .then((value) => {
                 analytics.logEvent("change_primary_color", {
@@ -386,9 +469,39 @@ appearance.changeSecondaryColor = (secondaryColor) => {
 
         const userDocumentReference = firestore.collection("users").doc(uid);
 
-        userDocumentReference
-            .update({
-                "theme.secondaryColor": secondaryColor.id,
+        userDocumentReference.update({
+            "theme.secondaryColor": secondaryColor.id,
+        });
+        database
+            .ref("user")
+            .child(uid)
+            .child("profile")
+            .once("value", (k) => {
+                // console.log("1", k);
+                // let values = k.val();
+                let profileId = Object.keys(k.val())[0];
+                // console.log("2", k.key);
+                // console.log("3", values[profileId].fname);
+                // console.log("3", values);
+                // console.log("id", profileId);
+                database
+                    .ref("user")
+                    .child(uid)
+                    .child("profile")
+                    .child(profileId)
+                    .update({
+                        "theme.secondaryColor": secondaryColor.id,
+                    })
+                    .then((value) => {
+                        analytics.logEvent("change_secondary_color", {
+                            secondaryColor: secondaryColor.id,
+                        });
+
+                        resolve(value);
+                    })
+                    .catch((reason) => {
+                        reject(reason);
+                    });
             })
             .then((value) => {
                 analytics.logEvent("change_secondary_color", {
@@ -423,9 +536,40 @@ appearance.changeDark = (dark) => {
 
         const userDocumentReference = firestore.collection("users").doc(uid);
 
-        userDocumentReference
-            .update({
-                "theme.dark": dark,
+        userDocumentReference.update({
+            "theme.dark": dark,
+        });
+
+        database
+            .ref("user")
+            .child(uid)
+            .child("profile")
+            .once("value", (k) => {
+                // console.log("1", k);
+                // let values = k.val();
+                let profileId = Object.keys(k.val())[0];
+                // console.log("2", k.key);
+                // console.log("3", values[profileId].fname);
+                // console.log("3", values);
+                // console.log("id", profileId);
+                database
+                    .ref("user")
+                    .child(uid)
+                    .child("profile")
+                    .child(profileId)
+                    .update({
+                        "theme.dark": dark,
+                    })
+                    .then((value) => {
+                        analytics.logEvent("change_dark", {
+                            dark: dark,
+                        });
+
+                        resolve(value);
+                    })
+                    .catch((reason) => {
+                        reject(reason);
+                    });
             })
             .then((value) => {
                 analytics.logEvent("change_dark", {
@@ -437,6 +581,16 @@ appearance.changeDark = (dark) => {
             .catch((reason) => {
                 reject(reason);
             });
+        // .then((value) => {
+        //     analytics.logEvent("change_dark", {
+        //         dark: dark,
+        //     });
+
+        //     resolve(value);
+        // })
+        // .catch((reason) => {
+        //     reject(reason);
+        // });
     });
 };
 
