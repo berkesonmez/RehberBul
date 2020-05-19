@@ -65,7 +65,7 @@ export default function PostCard(props) {
             transform: "rotate(180deg)",
         },
         avatar: {
-            backgroundColor: red[500],
+            backgroundColor: theme.palette.primary.main,
         },
     }));
 
