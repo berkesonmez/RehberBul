@@ -47,6 +47,125 @@ export default function FloatingActionButtons(props) {
     const [descriptionValue, setDiscriptionValue] = useState("");
     const [clicked, setClicked] = useState(false);
     const [isCurrentUser, setIsCurrentUser] = useState(false);
+    const [performingAction, setPerformingAction] = useState(false);
+    const [startUpload, setStartUpload] = useState(false);
+    const [image, setImage] = useState(null);
+    const [imageUrl, setImageUrl] = useState("");
+    const [postImageUrl, setPostImageUrl] = useState("");
+    const [postKey, setPostKey] = useState("");
+
+    const handleAddImage = (event) => {
+        if (!event) {
+            return;
+        }
+
+        const files = event.target.files;
+
+        if (!files) {
+            return;
+        }
+
+        const image = files[0];
+
+        if (!image) {
+            return;
+        }
+
+        const fileTypes = [
+            "image/gif",
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/svg+xml",
+        ];
+
+        if (!fileTypes.includes(image.type)) {
+            return;
+        }
+
+        if (image.size > 20 * 1024 * 1024) {
+            return;
+        }
+
+        setImage(image);
+        setImageUrl(URL.createObjectURL(image));
+        // this.setState({
+        //     image: image,
+        //     imageUrl: URL.createObjectURL(image),
+        // });
+    };
+    // useEffect(() => {
+    //     if (clicked) {
+    //         authentication
+    //             .addImage(image)
+    //             .then((value) => {
+    //                 setPostImageUrl(value);
+    //                 console.log("image uploaded", value);
+    //             })
+    //             .catch((reason) => {
+    //                 const code = reason.code;
+    //                 const message = reason.message;
+
+    //                 switch (code) {
+    //                     default:
+    //                         console.log(message);
+    //                         // this.props.openSnackbar(message);
+    //                         return;
+    //                 }
+    //             })
+    //             .finally(() => {
+    //                 setPerformingAction(false);
+    //                 setImage(null);
+    //                 setImageUrl("");
+    //                 // this.setState({
+    //                 //     performingAction: false,
+    //                 //     loadingAvatar: false,
+    //                 //     avatar: null,
+    //                 //     avatarUrl: "",
+    //                 // });
+    //             });
+    //     }
+    // }, [startUpload]);
+    const removeImage = () => {
+        console.log("Fotoğraf Kaldırıldı");
+        setImage(null);
+        setImageUrl("");
+    };
+    const uploadImage = () => {
+        if (!image) {
+            return;
+        }
+        authentication
+            .addImage(image)
+            .then((value) => {
+                setPostImageUrl(value.imageUrl);
+                setPostKey(value.postKey);
+            })
+            .catch((reason) => {
+                const code = reason.code;
+                const message = reason.message;
+
+                switch (code) {
+                    default:
+                        console.log(message);
+                        // this.props.openSnackbar(message);
+                        return;
+                }
+            })
+            .finally(() => {
+                setPerformingAction(false);
+                setImage(null);
+                setImageUrl("");
+                // this.setState({
+                //     performingAction: false,
+                //     loadingAvatar: false,
+                //     avatar: null,
+                //     avatarUrl: "",
+                // });
+            });
+        // setStartUpload(true);
+        setPerformingAction(true);
+    };
 
     const [post, setPost] = useState({
         category: "",
@@ -60,7 +179,7 @@ export default function FloatingActionButtons(props) {
         ownerId: "",
         personalDetail: "",
         // phone: "",
-        price: "Ücretsiz",
+        price: 0,
         // profileImg: "",
         tCategoryId: "",
         tCityId: "p1",
@@ -73,12 +192,11 @@ export default function FloatingActionButtons(props) {
     const theme = useTheme();
     // const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
     const handleClickOpen = () => {
-        console.log(props.user);
         setPost({
             ...post,
             ownerId: props.user.uid,
-            profileImg: props.user.photoURL ? props.user.photoURL : "",
-            firestore: true,
+            // profileImg: props.user.photoURL ? props.user.photoURL : "",
+            // firestore: true,
         });
         setOpen(true);
     };
@@ -87,10 +205,6 @@ export default function FloatingActionButtons(props) {
         setOpen(false);
         setClicked(true);
 
-        console.log(cityValue);
-        console.log(cityInputValue);
-
-        console.log(post);
         // database.ref("user/").on("value", (snapshot) => {
         //     const users = snapshot.val();
         //     // const newState = [];
@@ -103,9 +217,19 @@ export default function FloatingActionButtons(props) {
         //     }
         //     // setCategoryValue(newState[0]);
         // });
-
-        database.ref("tours").push().set(post);
+        // const postKey = database.ref().push().key;
+        uploadImage();
     };
+    useEffect(() => {
+        if (postKey !== "") {
+            // setPost();
+
+            database
+                .ref("tours")
+                .child(postKey)
+                .set({ ...post, tourImage: postImageUrl });
+        }
+    }, [postKey]);
     const handleCancel = (e) => {
         setOpen(false);
     };
@@ -133,13 +257,11 @@ export default function FloatingActionButtons(props) {
                 newState.push(Categories[category]);
             }
             setCategories(newState);
-            console.log(newState);
             setCategoryValue(newState[0]);
         });
     }, []);
     useEffect(() => {
         if (clicked) {
-            console.log(post);
             setPost({
                 ...post,
                 city: cityValue.il,
@@ -188,6 +310,7 @@ export default function FloatingActionButtons(props) {
                         helperText="Gezinizin ismini giriniz"
                     />
                     <TextField
+                        style={{ marginTop: "1em" }}
                         value={post.price}
                         onChange={(e) => {
                             setPost({ ...post, price: e.target.value });
@@ -202,6 +325,7 @@ export default function FloatingActionButtons(props) {
                         helperText="Gezinizin ücretini giriniz"
                     />
                     <TextField
+                        style={{ marginTop: "1em" }}
                         value={post.groupSize}
                         onChange={(e) => {
                             setPost({ ...post, groupSize: e.target.value });
@@ -216,6 +340,7 @@ export default function FloatingActionButtons(props) {
                         helperText="Kişi sayısını giriniz"
                     />
                     <TextField
+                        style={{ marginTop: "1em" }}
                         value={post.time}
                         onChange={(e) => {
                             setPost({ ...post, time: e.target.value });
@@ -230,6 +355,7 @@ export default function FloatingActionButtons(props) {
                         helperText="Tur uzunluğunu giriniz"
                     />
                     <TextField
+                        style={{ marginTop: "1em" }}
                         value={post.language}
                         onChange={(e) => {
                             setPost({ ...post, language: e.target.value });
@@ -294,7 +420,7 @@ export default function FloatingActionButtons(props) {
                         onInputChange={(event, newInputValue) => {
                             let categoryId = "";
                             let categoryType = "";
-                            let oldCategoryType = "";
+                            // let oldCategoryType = "";
                             switch (newInputValue) {
                                 case "Doğa Gezintisi":
                                     categoryId = "c1";
@@ -318,9 +444,8 @@ export default function FloatingActionButtons(props) {
                                     // categoryType = "isNatural";
                                     break;
                             }
-                            console.log(categoryId);
-                            console.log(categoryType);
-                            if (categoryType != "") {
+
+                            if (categoryType !== "") {
                                 setPost({
                                     ...post,
                                     category: newInputValue,
@@ -384,17 +509,46 @@ export default function FloatingActionButtons(props) {
                         fullWidth
                         variant="outlined"
                     />
-                    <Button
-                        style={{ marginTop: "1em" }}
-                        color="primary"
-                        component="span"
-                        //   disabled={performingAction}
-                        startIcon={<PhotoIcon />}
-                        variant="contained"
-                        fullWidth
-                    >
-                        Seç
-                    </Button>
+
+                    {image && imageUrl && (
+                        <Button
+                            color="primary"
+                            component="span"
+                            style={{ marginTop: "1em" }}
+                            fullWidth
+                            disabled={performingAction}
+                            startIcon={<PhotoIcon />}
+                            variant="contained"
+                            onClick={removeImage}
+                        >
+                            Kaldır
+                        </Button>
+                    )}
+                    {!image && !imageUrl && (
+                        <>
+                            <input
+                                id="image-input"
+                                type="file"
+                                hidden
+                                accept="image/*"
+                                onChange={handleAddImage}
+                            />
+
+                            <label htmlFor="image-input">
+                                <Button
+                                    color="primary"
+                                    component="span"
+                                    style={{ marginTop: "1em" }}
+                                    fullWidth
+                                    disabled={performingAction}
+                                    startIcon={<PhotoIcon />}
+                                    variant="contained"
+                                >
+                                    Seç
+                                </Button>
+                            </label>
+                        </>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button id="cancel" onClick={handleCancel} color="primary">

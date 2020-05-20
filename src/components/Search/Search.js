@@ -96,6 +96,9 @@ function Search(props) {
                 queryType = "city";
                 queryStr = "city";
                 headerStr += "şehri için sonuçlar";
+                queryId =
+                    queryId.charAt(0).toUpperCase() +
+                    queryId.slice(1).toLowerCase();
                 break;
             case "uid":
                 queryType = "ownerId";

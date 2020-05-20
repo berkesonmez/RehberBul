@@ -10,12 +10,12 @@ const authProviders = [
     //     icon: <AppleIcon />,
     //     name: "Apple",
     // },
-    {
-        providerId: "facebook.com",
-        color: "#3c5a99",
-        icon: <FacebookIcon />,
-        name: "Facebook",
-    },
+    // {
+    //     providerId: "facebook.com",
+    //     color: "#3c5a99",
+    //     icon: <FacebookIcon />,
+    //     name: "Facebook",
+    // },
     // {
     //     providerId: "github.com",
     //     color: "#24292e",

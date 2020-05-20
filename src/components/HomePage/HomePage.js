@@ -13,7 +13,7 @@ import Cities from "../Cities";
 // import { ReactComponent as CabinIllustration } from "../../illustrations/cabin.svg";
 
 import { makeStyles } from "@material-ui/core/styles";
-import WelcomePage from "../WelcomePage/WelcomePage";
+import WelcomePage from "../WelcomePage";
 import Loader from "../Loader";
 
 // import { responsiveFontSizes } from "@material-ui/core";
@@ -62,8 +62,8 @@ const HomePage = (props) => {
             for (let category in categories) {
                 newState.push(categories[category]);
             }
-            setLoading(false);
             setCategories(newState);
+            setLoading(false);
         });
         database.ref("cities/").on("value", (snapshot) => {
             const cities = snapshot.val();
@@ -71,8 +71,8 @@ const HomePage = (props) => {
             for (let city in cities) {
                 newState.push(cities[city]);
             }
-            setLoading(false);
             setCities(newState);
+            setLoading(false);
         });
     }, []);
 
@@ -163,19 +163,20 @@ const HomePage = (props) => {
     if (loading) {
         return <Loader />;
     }
-
-    return (
-        <>
-            {/* <LoadImage /> */}
-            <div className={classes.root}>
-                {!user ? <WelcomePage /> : null}
-                <h1>Kategoriler</h1>
-                <Categories categories={categories} />
-                <h1>Şehirler</h1>
-                <Cities cities={cities} />
-            </div>
-        </>
-    );
+    if (!loading) {
+        return (
+            <>
+                {/* <LoadImage /> */}
+                <div className={classes.root}>
+                    <h1>Kategoriler</h1>
+                    <Categories categories={categories} />
+                    <h1>Şehirler</h1>
+                    <Cities cities={cities} />
+                </div>
+            </>
+        );
+    }
+    return <h1>Test</h1>;
 };
 
 HomePage.propTypes = {

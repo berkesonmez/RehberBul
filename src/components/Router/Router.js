@@ -23,10 +23,6 @@ class Router extends Component {
             <BrowserRouter basename={process.env.REACT_APP_BASENAME}>
                 {bar}
                 <Switch>
-                    <Route path="/" exact>
-                        <HomePage user={user} openSnackbar={openSnackbar} />
-                    </Route>
-
                     <Route path="/admin">
                         {user && roles.includes("admin") ? (
                             <AdminPage />
@@ -55,6 +51,10 @@ class Router extends Component {
                             return null;
                         }}
                     />
+
+                    <Route path="/" exact component={HomePage}>
+                        <HomePage user={user} openSnackbar={openSnackbar} />
+                    </Route>
 
                     <Route>
                         <NotFoundPage />

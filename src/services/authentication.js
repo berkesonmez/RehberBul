@@ -657,6 +657,116 @@ authentication.changeAvatar = (avatar) => {
             });
     });
 };
+authentication.addImage = (image) => {
+    return new Promise((resolve, reject) => {
+        if (!image) {
+            reject();
+
+            return;
+        }
+
+        const imageFileTypes = [
+            "image/gif",
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/svg+xml",
+        ];
+
+        if (!imageFileTypes.includes(image.type)) {
+            reject();
+
+            return;
+        }
+
+        if (image.size > 20 * 1024 * 1024) {
+            reject();
+
+            return;
+        }
+
+        const currentUser = auth.currentUser;
+
+        if (!currentUser) {
+            reject();
+
+            return;
+        }
+
+        const uid = currentUser.uid;
+
+        if (!uid) {
+            reject();
+
+            return;
+        }
+        const imageKey = database.ref().push().key;
+        const postKey = database.ref().push().key;
+        const imageReference = storage
+            .ref()
+            .child("images")
+            .child(uid)
+            .child(postKey)
+            .child(imageKey);
+        // .child("avatars");
+
+        imageReference
+            .put(image)
+            .then((uploadTaskSnapshot) => {
+                imageReference
+                    .getDownloadURL()
+                    .then((value) => {
+                        resolve({
+                            imageUrl: value,
+                            postKey: postKey,
+                        });
+                        // currentUser.updateProfile({
+                        //     photoURL: value,
+                        // });
+                        // database
+                        //     .ref("user")
+                        //     .child(uid)
+                        //     .child("profile")
+                        //     .once("value", (k) => {
+                        //         // console.log("1", k);
+                        //         // console.log("2", k.key);
+                        //         let values = k.val();
+                        //         let profileId = Object.keys(k.val())[0];
+                        //         // let firstName = values[profileId].fname;
+
+                        //         console.log("id", profileId);
+                        //         console.log("url", value);
+                        //         database
+                        //             .ref("user")
+                        //             .child(uid)
+                        //             .child("profile")
+                        //             .child(profileId)
+                        //             .update({
+                        //                 photo: value,
+                        //             })
+                        //             .then((value) => {
+                        //                 analytics.logEvent("change_avatar");
+
+                        //                 resolve(value);
+                        //             })
+                        //             .catch((reason) => {
+                        //                 reject(reason);
+                        //             });
+                        //     })
+
+                        // .catch((reason) => {
+                        //     reject(reason);
+                        // });
+                    })
+                    .catch((reason) => {
+                        reject(reason);
+                    });
+            })
+            .catch((reason) => {
+                reject(reason);
+            });
+    });
+};
 
 authentication.removeAvatar = () => {
     return new Promise((resolve, reject) => {
@@ -683,9 +793,9 @@ authentication.removeAvatar = () => {
             .then((value) => {
                 const avatarReference = storage
                     .ref()
-                        .child("images")
-                        .child(uid)
-                        .child(uid);
+                    .child("images")
+                    .child(uid)
+                    .child(uid);
 
                 avatarReference
                     .delete()

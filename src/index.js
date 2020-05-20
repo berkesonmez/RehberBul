@@ -12,4 +12,4 @@ Sentry.init({
 });
 
 ReactDOM.render(<App />, document.getElementById("root"));
-serviceWorker.register();
+// serviceWorker.register();

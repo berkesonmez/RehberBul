@@ -1,6 +1,7 @@
 {
     "name": "RehberBul",
     "version": "0.1.0",
+    "homepage": "http://localhost/",
     "private": true,
     "dependencies": {
         "@material-ui/codemod": "^4.5.0",
